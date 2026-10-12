@@ -1466,6 +1466,12 @@ static SBN_Status_t TeardownSubPipe(void)
 {
     CFE_Status_t Status;
 
+    /* Nothing to do if the pipe was never created (e.g. Init() failed early) */
+    if (!CFE_RESOURCEID_TEST_DEFINED(SBN_AppData.SubPipe))
+    {
+        return SBN_SUCCESS;
+    }
+
     /* Delete pipe for subscribes and unsubscribes from SB */
     Status = CFE_SB_DeletePipe(SBN_AppData.SubPipe);
     if (Status != CFE_SUCCESS)
@@ -1473,6 +1479,8 @@ static SBN_Status_t TeardownSubPipe(void)
         EVSSendErr(SBN_INIT_EID, "failed to delete subscription pipe (Status=%d)", (int)Status);
         return SBN_ERROR;
     } /* end if */
+
+    SBN_AppData.SubPipe = CFE_SB_INVALID_PIPE;
 
     return SBN_SUCCESS;
 }
