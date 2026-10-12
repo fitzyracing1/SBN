@@ -1596,9 +1596,11 @@ static SBN_Status_t Cleanup(void)
 
     SBN_AppData.SubCnt = 0;
 
-    if (CFE_TBL_Update(SBN_AppData.ConfTblHandle) != CFE_SUCCESS)
+    /* No pending update is fine at cleanup; only a real error is a failure */
+    CFE_Status_t TblStatus = CFE_TBL_Update(SBN_AppData.ConfTblHandle);
+    if (TblStatus != CFE_SUCCESS && TblStatus != CFE_TBL_INFO_NO_UPDATE_PENDING)
     {
-        EVSSendErr(SBN_PEER_EID, "unable to update table");
+        EVSSendErr(SBN_PEER_EID, "unable to update table (Status=%d)", (int)TblStatus);
         return SBN_ERROR;
     } /* end if */
 
