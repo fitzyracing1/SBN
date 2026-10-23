@@ -12,6 +12,11 @@ on:
       - synchronize
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
 jobs:
   codeql:
     name: Codeql Analysis

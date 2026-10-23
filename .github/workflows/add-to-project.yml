@@ -6,6 +6,9 @@ on:
   pull_request_target:
     types: [opened, ready_for_review, converted_to_draft]
 
+permissions:
+  contents: read
+
 jobs:
   add-to-project:
     name: Add issue or pull request to project
